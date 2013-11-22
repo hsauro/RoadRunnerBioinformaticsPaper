@@ -40,7 +40,7 @@ There has been a long history~\citep{Bag01} of researchers developing biochemica
 Here we wish to describe libRoadRunner, a rewrite of the C\# roadRunner. libRoadRunner is written in C++ with an additional thin C API. The API supports over 130 methods than provide a wide range of functionality and rapid access to the core to improve performance in realtime interactive environments. libRoadRunner supports a plugin extension mechanism making it possible to easily write extensions to the core (See Plugins). One of the key and novel features of libRoadRunner is that superior runtime performance is achieved through the use of LLVM (formerly Low Level Virtual Machine) which is designed for real-time optimization and dynamic compilation of application software. This has allowed us to develop the fastest biochemical simulator currently available. This is particularly important for large simulation applications such as ComuCell3D where 10,000 of cells are simulated simultaneously and performance is critical. Figure~\ref{fig:01} shows the architectural overview of libRoadRunner.
 
 \begin{figure}[!htpb]%figure2
-\centerline{\includegraphics[scale=0.7]{atp.pdf}}
+\centerline{\includegraphics[scale=0.55]{roadRunnerOverview.pdf}}
 \caption{Architectural Overview of libRoadRunner.}\label{fig:01}
 \end{figure}
 
