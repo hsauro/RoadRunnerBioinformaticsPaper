@@ -1,31 +1,30 @@
 \documentclass{bioinfo}
-\copyrightyear{2005}
-\pubyear{2005}
+\copyrightyear{2013}
+\pubyear{2013}
 
 \begin{document}
 \firstpage{1}
 
 \title[libRoadRunner]{libRoadRunner: A High Performance SBML Compliant Simulator}
-\author[Sample \textit{et~al}]{H. M Sauro\,$^{1,*}$, M. T. Karlsson\,$^{2}$, Maciej Swat\,$^{3}$ and A. Somogyi\,$^4$\footnote{to whom correspondence should be addressed}}
-\address{$^{1}$Department of Bioengineering, University of Washington, Seattle, WA, 98195\\
+\author[Sample \textit{et~al}]{A. Somogyi\,$^{1,*}$, M. T. Karlsson\,$^{2}$, M. Swat\,$^{1}$ and H. M Sauro\,$^3$\footnote{to whom correspondence should be addressed}}
+\address{$^{1,3}$Biocomplexity Institute, Indiana University, Simon Hall MSB1, 212 S. Hawthorne Drive, Bloomington, IN  47405-7003
+\\
 $^{2}$Dune Scientific, 10522 Lake City Way NE, \#302 Seattle WA \\
-$^{3}$Department of Bioengineering, University of Washington, Bloomington, WA, 98195\\
-$^{4}$Department of Bioengineering, University of Washington, Seattle, WA, 98195}
+$^{3}$Department of Bioengineering, University of Washington, Seattle, WA, 98195}
 
-\history{Received on XXXXX; revised on XXXXX; accepted on XXXXX}
+\history{Version 0.75}
 
-\editor{Associate Editor: XXXXXXX}
+\editor{Associate Editor: XXXXX}
 
 \maketitle
 
 \begin{abstract}
 
 \section{Summary:}
-Text Text Text  Text Text Text Text Text Text Text Text
-Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text.
+Here we describe libRoadRunner, a high performance SBML compliant simulator written in C/C++. Simulation speed is achieved by creating a LLVM backend of a model at runtime based on the loaded SBML. The primary motivation for developing libRoadRunner was to create a portable that would have superior performance to any other existing simulator, provide an extensible architecture, and a wide variety of functionality. In addition it would have superior support for event handling in addition to the normal features such as conservation analysis.
 
 \section{Availability and Implementation:}
-The library is open source and dual licensed under the Apache License, Version 2.0. Project source code, downloads and documentation are available at http://code.google.com/p/lib-sbml-reaction-finder.
+The core of libRoadRunner is written in C++ but with an additional thin layer that supports a pure C API. Users can link the library to other C++ applications or systems that can only link to C functions.  The library uses libSBML for SBML support, CVODE for differential equation implementation and event handling, NLEQ2 for solving nonlinear equations and LAPACK for stoichiometric analysis. The library is cross-platform and runs on Windows, Mac OS X and Linux. We also provide extensive bindings for Python. The library is open source and licensed under the Apache License, Version 2.0.
 
 \section{Contact:} \href{hsauro@u.washington.edu}{hsauro@u.washington.edu}
 
@@ -36,154 +35,64 @@ Online documentation, build instructions and source code are available at http:/
 
 \section{Introduction}
 
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure~\ref{fig:01} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citep{Bag01} wants to know about …… text follows.
+There has been a long history~\citep{Bag01} of researchers developing biochemical network simulators. Most are monolithic making it very difficult to reuse the code for other applications. Recently there has been more interest in development reusable libraries. Most notable of these are COPASI, libSBMLSim, roadRunner, SOSLib and the Systems Biology Simulation Core Library (SBSCL). Each has strengths and weakness, for example COPASI has excellent support for optimization but its API can be challenging to use (see https://code.google.com/p/copasi-simple-api/), libSBMLSim passes all the tests in the SBML test suite but its API and functionality is somewhat limited, roadRunner is written in C\# which is excellent for .NET developers but less so for others, SOSLib is no longer supported but it has a reasonable API but does not support conservation analysis and finally SBSCL is written in Java which makes it an excellent choice for Java developers but less so for others and also doesn't support conservation analysis. All the libraries have performance issues and stability concerns (see benchmarking), most have problems tracking events except perhaps roadRunner and all have a non-extensible architectures.
 
-\begin{equation}
-\sum x+ y =Z\label{eq:01}
-\end{equation}
+Here we wish to describe libRoadRunner, a rewrite of the C\# roadRunner. libRoadRunner is written in C++ with an additional thin C API. The API supports over 130 methods than provide a wide range of functionality and rapid access to the core to improve performance in realtime interactive environments. libRoadRunner supports a plugin extension mechanism making it possible to easily write extensions to the core (See Plugins). One of the key and novel features of libRoadRunner is that superior runtime performance is achieved through the use of LLVM (formerly Low Level Virtual Machine) which is designed for real-time optimization and dynamic compilation of application software. This has allowed us to develop the fastest biochemical simulator currently available. This is particularly important for large simulation applications such as ComuCell3D where 10,000 of cells are simulated simultaneously and performance is critical. Figure~\ref{fig:01} shows the architectural overview of libRoadRunner.
 
-
-
-
-
-
-\section{Approach}
-
-Equation~(\ref{eq:01}) Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text ……
-
+\begin{figure}[!htpb]%figure2
+\centerline{\includegraphics[scale=0.55]{roadRunnerOverview.pdf}}
+\caption{Architectural Overview of libRoadRunner.}\label{fig:01}
+\end{figure}
 
 \begin{methods}
 \section{Methods}
 
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
+\subsection{Features}
 
-\begin{itemize}
-\item for bulleted list, use itemize
-\item for bulleted list, use itemize
-\item for bulleted list, use itemize
-\end{itemize}
+List of features here
+
+\subsection{LLVM Backend}
+
+For those systems such as embedded and more specialist situations where a C++ compiler might be unavailable, roadRunner also provide san option to generate C code and to compile and link the C code into roadRunner using the small portable tcc C compiler (url).
 
 
+\subsection{Extensibility}
 
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text.
+Extensibility was an importance consideration in the design of the roadRunner library. Two methods are available to add extensions. The easiest is to add new extension by writing Python scripts, this is simple to do but with the disadvantage of poorer performance. The alternative is to write native code plugins that can be loaded on demand by the roadRunner core. A plugin API is available as a pure C API so that plugins can be written in almost any language. Under Windows, a plugin is just a standard DLL. Plugins can be loaded and unloaded on demand and can be executed in a separate thread. Plugins have full access to the roadRunner API which includes the ability to create new roadRunner instances. A primary advantage of plugins is that additional functionality can be developed without disturbing any of core roadRunner code. In addition, the plugin exposes a set of methods to allow generic access any exported plugin functionality. This means that scripting languages such as Python can easily access a plugin without having to implement a new API for every plugin. Plugins also support a degree of runtime type information that allows graphical user interface applications to create user interfaces ar runtime when the plugin is loaded. The roadRunner distribution comes with two plugins that illustrate how plugins can be built, these include a a plugin that implements the Levenberg-Marquardt algorithm (ref) that allows models to be fitted to experimental data and a smaller plugin that can be used to generate synthetic experimental data for testing the Levenberg-Marquardt plugin.
 
+\subsection{Python API}
 
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
+Two Python APIs were developed, a ctypes based library and customized SWIG binding. The SWIG binding is more comprehensive and Pythonic in its design and is the recommended interface to use on a daily basis. The ctypes Python interface is used to specifically test the C API. Here we briefly describe the SWIG bindings.
 
+\subsection{Performance}
 
-
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-
-
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-
-
-
+We compared three other simulator libraries with libRoadRunner (ref), these included libSBMLSim (ref), COPASI (ref) and Systems Biology Simulation Core Library (ref). We tested the ability pass the SBML test suite, the ability to simulate very large models and the ability to simulate systems with large numbers of events. Table~\ref{Tab:01} lists the times recorded from the four different libraries based on three different types of model. The first model is a moderate sized model that tests the general performance in integration and evaluating the differential equations. The second model tests the ability of the libraries to scale to very large models and the third library tests the ability of the library to deal with large number of discrete events. The timings also include the amount of time requite to load the SBML model and compile it to executable code.
+%
 \begin{table}[!t]
-\processtable{This is table caption\label{Tab:01}}
+\processtable{All times are in milliseconds. Test models are available at libroadrunner.org\label{Tab:01}}
 {\begin{tabular}{llll}\toprule
-head1 & head2 & head3 & head4\\\midrule
-row1 & row1 & row1 & row1\\
-row2 & row2 & row2 & row2\\
-row3 & row3 & row3 & row3\\
-row4 & row4 & row4 & row4\\\botrule
-\end{tabular}}{This is a footnote}
+Application & Simulation & Large Models & Event Handling\\\midrule
+libRoadRunner & 23 & 45 & 67  \\
+COPASI & 200 & 400 & fail\\
+libSBMLSim & 450 & fail & fail\\
+SBSCL & 500 & 800 & fail \\ \botrule
+\end{tabular}}{}
 \end{table}
+
+\subsection*{Implementation Details}
+
+The dedicated web site, libroadrunner.org includes all the necessary information concerning libRoadRunner including documentation for the C++ and C API, and documentation for the Python SWIG binding. Full build instructions are provided for Windows and Mac OS X. Build instructions for specific Linux disruptions can be obtained upon request particularly XYZ and ABC. All source code is stored on Github, documentation is generated via Doxygen and sphinc for Python. The build system is based around CMake, Linux binaries are generated using GCC, Mac binaries via CLang \citealp{Boffelli03} and Windows binaries via Visual Studio 2010. Binaries are provided for Windows, Mac OS X, including binaries for Python 2.7 on Windows and Mac OS X.
 
 \end{methods}
 
-\begin{figure}[!tpb]%figure1
-%\centerline{\includegraphics{fig01.eps}}
-\caption{Caption, caption.}\label{fig:01}
-\end{figure}
-
-\begin{figure}[!tpb]%figure2
-%\centerline{\includegraphics{fig02.eps}}
-\caption{Caption, caption.}\label{fig:02}
-\end{figure}
-
 \section{Discussion}
 
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text.
-
-
-
-
-Table~\ref{Tab:01} shows that Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that
-the above method Text Text. Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that
-the above method Text Text. Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that
-the above method Text Text.
-
-
-
-
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%     please remove the " % " symbol from \centerline{\includegraphics{fig01.eps}}
-%     as it may ignore the figures.
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-
-
-
-\section{Conclusion}
-
-(Table~\ref{Tab:01}) Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.
-
-
-
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-
-
-
-
-
-\begin{enumerate}
-\item this is item, use enumerate
-\item this is item, use enumerate
-\item this is item, use enumerate
-\end{enumerate}
-
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text  Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text.
-
-
-
-
-
-
-Text Text Text Text Text Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text. Figure \ref{fig:02} shows that the above method  Text Text Text Text
-
+In this application note we describe a new high performance SBML compliant simulator. The reason for developing libRoadRunner was to satisfy a number of specific applications that require high performance, good SBML compatibility and broad functionality. These applications include interactive desktop simulation, multicellular simulations requiring 10,000 of simultaneous simulations, and multi-session needs for web based interactive simulation.  For the future we are planning a number of additional features, these include new plugins, particularly alternative optimizers, high performance distributed stochastic simulation support and additional efforts to help make distributed simulation easier to achieve. Currently used by: CompuCell3D, JDesigner, Tellurium, sysb.io
 
 \section*{Acknowledgement}
-Text Text Text Text Text Text  Text Text.  \citealp{Boffelli03} might want to know about  text text text text
+We wish to acknowledge Frank Bergmann who together with Herbert Sauro wrote the original roadRunner library in C\#. In addition libStruct, the structural analysis library previously developed by Frank Bergmann and Ravi Rao. We wish to also thank Michal Galdzicki who assisted in putting together the libroadrunner.org website. Finally we wish to thank Stanley Gu for testing libRoadRunner in his web based environment.
 
-\paragraph{Funding\textcolon} Text Text Text Text Text Text  Text Text.
+\paragraph{Funding\textcolon} Work supported by the National Institute of General Medical Sciences of the National Institutes of Health under award numbers R01-GM081070. The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health.
 
 %\bibliographystyle{natbib}
 %\bibliographystyle{achemnat}
