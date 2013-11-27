@@ -47,7 +47,7 @@ One of the key and novel features of libRoadRunner is use of the LLVM (formerly 
 \caption{Architectural Overview of libRoadRunner.}\label{fig:01}
 \end{figure}
 
-\begin{methods}
+%\begin{methods}
 \section{Methods}
 
 \subsection{Features}
@@ -69,13 +69,13 @@ LibRoadRunner can be extended externally through the use of the APIs (Python, C+
 
 \subsection{Python API}
 
-LibRoadrunner provides comprehensive and \emph{pythonic} Python extension module which is designed to have the same feel as existing SciPy package, and is the recommended for most external applications. The Python API allows access to any SBML element along with a variety of calculated values using the Python dictionary protocol. It allows direct access to all libRoadRunner owned data arrays by treating them as numpy arrays. This approach allows high performance access to any roadrunner data such as simulation results without copying any data -- a numpy multiarray is simply wrapped around existing data blocks. It also permits instantiations of multiple RoadRunner simulators and thus offers very natural way of using libRoadRunner as the Reaction-Kinetics engine in multi cell simulators such as CompuCell3D (www.compucell3d.org). The Python API exposes all of the functionality of the public C++ API of the actual simulator object that the end user needs to construct sophisticated SBML-based models. 
+LibRoadrunner provides a comprehensive and \emph{pythonic} Python extension module which is designed to have the same feel as the existing SciPy package.  This is the recommended way to use libRoadRunner for most external applications. The Python API allows access to any SBML element along with a variety of calculated values using the Python dictionary protocol. It allows direct access to all libRoadRunner owned data arrays by treating them as numpy arrays. This approach allows high performance access to any roadrunner data such as simulation results without copying any data -- a numpy multiarray is simply wrapped around existing data blocks. It also permits instantiations of multiple RoadRunner simulators and thus offers a very natural way of using libRoadRunner as the Reaction-Kinetics engine in multi cell simulators such as CompuCell3D (www.compucell3d.org). The Python API exposes all of the functionality of the public C++ API of the actual simulator object that the end user needs to construct sophisticated SBML-based models. 
 
-We also provide Python access with a different API to the libRoadRunner C API, this would be useful for prototyping legacy C code which will interact with the libRoadRunner C API and is useful testing the C API.  
+We also provide a Python binding to the libRoadRunner C API. This is useful for prototyping legacy C code which will interact with the libRoadRunner C API for testing the C API.  
 
 \subsection{Performance}
 
-We compared three other simulator libraries with libRoadRunner (ref), these included libSBMLSim (ref), COPASI (ref) and Systems Biology Simulation Core Library (ref). We tested the ability pass the SBML test suite, the ability to simulate very large models and the ability to simulate systems with large numbers of events. Table~\ref{Tab:01} lists the times recorded from the four different libraries based on three different types of model. The first model is a moderate sized model that tests the general performance in integration and evaluating the differential equations. The second model tests the ability of the libraries to scale to very large models and the third library tests the ability of the library to deal with large number of discrete events. The timings also include the amount of time requite to load the SBML model and compile it to executable code.
+We compared three other simulator libraries with libRoadRunner (ref): libSBMLSim (ref), COPASI (ref) and Systems Biology Simulation Core Library (ref). We tested the ability to pass the SBML test suite, the ability to simulate very large models and the ability to simulate systems with large numbers of events. Table~\ref{Tab:01} lists the times recorded from the four different libraries based on three different types of model. The first model is a moderate sized model that tests the general performance in integration and in evaluations of the differential equations. The second model tests the ability of the libraries to scale to very large models and the third library tests the ability of the library to deal with a large number of discrete events. The timings also include the amount of time required to load the SBML model and compile it to executable code.
 %
 \begin{table}[!t]
 \processtable{All times are in milliseconds. Test models are available at libroadrunner.org\label{Tab:01}}
@@ -88,26 +88,26 @@ SBSCL & 500 & 800 & fail \\ \botrule
 \end{tabular}}{}
 \end{table}
 
-\subsection*{Implementation Details}
+\subsection{Implementation Details}
 
-The dedicated web site, libroadrunner.org includes all the necessary information concerning libRoadRunner including documentation for the C++ and C API, and documentation for the Python SWIG binding. Full build instructions are provided for Windows and Mac OS X. Build instructions for specific Linux disruptions can be obtained upon request particularly XYZ and ABC. All source code is stored on Github, documentation is generated via Doxygen and sphinc for Python. The build system is based around CMake, Linux binaries are generated using GCC, Mac binaries via CLang \citealp{Boffelli03} and Windows binaries via Visual Studio 2010. Binaries are provided for Windows, Mac OS X, including binaries for Python 2.7 on Windows and Mac OS X.
+The dedicated web site, libroadrunner.org includes all the necessary information concerning libRoadRunner as well as documentation for the Python, C++ and C APIs. Full build instructions are provided for Linux, Windows and Mac OS X. All source code is stored on Github; documentation is generated via Doxygen and Sphinx for Python. The build system is based around CMake, Linux binaries are generated using GCC, Mac binaries via CLang \citealp{Boffelli03} and Windows binaries via Visual Studio 2010. Binaries are provided for Windows, Mac OS X, including binaries for Python 2.7 on Windows and Mac OS X.
 
 
 \subsection{Using libRoadRunner in multi-cell simulations}
 
-As a proof of concept we have successfully deployed libRoadRunner as Reaction-Kinetic solver engine in CompuCell3D. CompuCell3D is a simulation environment used to build multi-cell, single-cell based models of tissues. We have used Python API to associate with each CompuCell3D cell a collection of libRoadRunner-based simulators. Since CompuCell3D uses python scripting to describe its models integrating libRoadRunner was particularly easy. The clean design of the libRoadRunner Python API was helpful in designing intuitive part of the CompuCell3D Python API that deals with biochemical simulator handling. Previous versions of CompuCell3D relied on biochemical simulators that had either interpreted cores or used on-the-fly compilation and unlike libRoadRunner they were difficult to deploy and maintain. 
+As a proof of concept we have successfully deployed libRoadRunner as Reaction-Kinetic solver engine in CompuCell3D. CompuCell3D is a simulation environment used to build multi-cell based models of tissues. We have used the libRoadRunner Python API to associate each CompuCell3D with a collection of libRoadRunner-based simulators. Since CompuCell3D uses Python scripting to describe its models integrating libRoadRunner was particularly easy. The clean design of the libRoadRunner Python API was helpful in designing intuitive part of the CompuCell3D Python API that deals with biochemical simulator handling. Previous versions of CompuCell3D relied on biochemical simulators that were either interpreters or relied on external C compilers, and unlike libRoadRunner they were difficult to deploy and maintain. 
 
-We ran Delta-Notch patterning simulation {\bf Swat03} on the array of 36 adjacent cells with different reaction-kinetics models solvers and determined that libRoadRunner solvers led to  2x shorter overall simulation runtimes as compared to the previous implementations present in older version of CompuCell3D. One should keep in mind that in multi-cell simulations time spend on solving reaction-kinetics models makes up only a fraction of the total runtime. Thus 2x  speedup of the overall simulation is quite significant and is representative of the high-performance focus of the new libRoadRunner. 
+We ran Delta-Notch patterning simulation {\bf Swat03} on the array of 36 adjacent cells with different reaction-kinetics models solvers and determined that libRoadRunner solvers led to  2x shorter overall simulation runtimes as compared to the previous implementations present in older version of CompuCell3D. One should keep in mind that in multi-cell simulations time spent on solving reaction-kinetics models makes up only a fraction of the total runtime. Thus 2x  speedup of the overall simulation is quite significant and is representative of the high-performance focus of the new libRoadRunner. 
   
 
-\end{methods}
+%\end{methods}
 
 \section{Discussion}
 
-In this application note we describe a new high performance SBML compliant simulator. The reason for developing libRoadRunner was to satisfy a number of specific applications that require high performance, good SBML compatibility and broad functionality. These applications include interactive desktop simulation, multicellular simulations often requiring 10,000 or more of simultaneous simulations, and multi-session needs for web based interactive simulation.  For the future we are planning a number of additional features, these include new plugins, particularly alternative optimizers, and a bifurcation analysis plugin. Expand this: Currently used by: CompuCell3D, JDesigner, Tellurium, sysb.io
+In this application note we describe a new high performance SBML compliant simulator. The reason for developing libRoadRunner was to satisfy a number of specific applications that require high performance, good SBML compatibility and broad functionality. These applications include interactive desktop simulation, multicellular simulations often requiring 10,000 or more simultaneous simulations, and multi-session needs for web based interactive simulation.  For the future we are planning a number of additional features including stochastic GPU integrators, parallel distributed model JIT compilation and simulation, spatial models as well as new plugins such as alternative optimizers, and a bifurcation analysis. Expand this: Currently used by: CompuCell3D, JDesigner, Tellurium, sysb.io
 
 \section*{Acknowledgement}
-We wish to acknowledge Frank Bergmann who together with Herbert Sauro wrote the original roadRunner library in C\#. In addition libStruct, the structural analysis library previously developed by Frank Bergmann and Ravi Rao. We wish to also thank Michal Galdzicki who assisted in putting together the libroadrunner.org website. Finally we wish to thank Stanley Gu for testing libRoadRunner in his web based environment.
+We wish to acknowledge Frank Bergmann who together with Herbert Sauro wrote the original roadRunner library in C\# and wrote libStruct, the structural analysis library along with Ravi Rao. We wish to also thank Michal Galdzicki who assisted in putting together the libroadrunner.org website. Finally we wish to thank Stanley Gu for testing libRoadRunner in his web based environment.
 
 \paragraph{Funding\textcolon} Work supported by the National Institute of General Medical Sciences of the National Institutes of Health under award numbers R01-GM081070. The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health.
 
